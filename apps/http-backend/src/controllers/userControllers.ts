@@ -15,7 +15,7 @@ export const signup = async (req: Request, res: Response) => {
     const key = `rate:signup:${ip}`
 
 
-    if (await checkRateLimit(key,5,3600)){
+    if (await checkRateLimit(key,49,3600)){
        res.status(429).json({error:"Too many signups.Try later."})
        return 
     }
@@ -48,7 +48,7 @@ export const signup = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Error during signup", details: error });
   }
 };
-
+//signin controller
 export const signin = async (req: Request, res: Response) => {
   const result = SignInZodSchema.safeParse(req.body);
 
@@ -60,7 +60,7 @@ export const signin = async (req: Request, res: Response) => {
   const ip = req.ip
   const { username, password } = result.data;
   const key =`rate:signin:${username}:${ip}`
-    if(await checkRateLimit(key  ,5,900)){
+    if(await checkRateLimit(key  ,49,900)){ //rate limit increased
       res.status(429).json({error:"Too many login attempts. try later."})
       return 
     }

@@ -11,10 +11,27 @@ const users :User[] = []
 const WS_PORT = getwsport()
 
 export const createWebSocketServer = () => {
-  const wss = new WebSocketServer({ port: WS_PORT });
+  const wss = new WebSocketServer({ port: WS_PORT  ,   maxPayload: 1024 * 1024 * 5});
 
   wss.on("connection", (ws, req) => {
+
+    
     try{
+      // ws.on("message", (data) => {
+      //   // Convert RawData → Buffer
+      //   const buffer = Buffer.isBuffer(data)
+      //     ? data
+      //     : Buffer.concat(data as Buffer[]);
+      
+      //   // Convert buffer → string
+      //   const text = buffer.toString("utf8");
+      
+      //   console.log("📥 Payload received:", buffer.length, "bytes");
+      //   console.log("Parsed text:", text);
+      
+      //   // Finally, parse JSON
+      //   const json = JSON.parse(text);
+      // });
     const url = new URL(req.url ?? "", "http://localhost");
     const token = url.searchParams.get("token");
 

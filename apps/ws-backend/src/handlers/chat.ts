@@ -7,6 +7,8 @@ export const Chats = (newUser: User, users: User[]) => {
   const { ws } = newUser;
 
   ws.on("message", async (data) => {
+    
+    
     try {
       let parsedJson : any 
       try {
@@ -87,7 +89,6 @@ export const Chats = (newUser: User, users: User[]) => {
 
             if (currentUser && !currentUser.rooms.includes(roomId)) {
               currentUser.rooms.push(roomId);
-              console.log(`${currentUser.userId} joined room: ${roomId}`);
             }
           } catch (error) {
             ws.send(
@@ -159,12 +160,10 @@ export const Chats = (newUser: User, users: User[]) => {
           const roomNum = room.id;
 
           await chatQueue.add("save-chat", { roomNum, userId, message });
-
           users.forEach((user) => {
             if (
               user.rooms.includes(roomId) &&
-              user.ws.readyState === user.ws.OPEN &&
-              user.userId !== userId // no echo to sender
+              user.ws.readyState === user.ws.OPEN
             ) {
               user.ws.send(
                 JSON.stringify({
@@ -176,6 +175,24 @@ export const Chats = (newUser: User, users: User[]) => {
               );
             }
           });
+          
+
+          // users.forEach((user) => {
+          //   if (
+          //     user.rooms.includes(roomId) &&
+          //     user.ws.readyState === user.ws.OPEN &&
+          //     user.userId !== userId // no echo to sender
+          //   ) {
+          //     user.ws.send(
+          //       JSON.stringify({
+          //         type: "chat",
+          //         from: userId,
+          //         message,
+          //         roomId,
+          //       })
+          //     );
+          //   }
+          // });
 
           // Optionally, echo back to sender (depends on UX choice)
           // ws.send(
@@ -187,6 +204,7 @@ export const Chats = (newUser: User, users: User[]) => {
           //     self: true,
           //   })
           // );
+
           break;
         }
 

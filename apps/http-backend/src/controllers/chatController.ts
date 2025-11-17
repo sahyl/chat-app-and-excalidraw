@@ -29,7 +29,7 @@ export const allChats = async (req: Request, res: Response) => {
         id: true,
         slug: true,
         chats: {
-          take: 10,
+          take: 1000,
           orderBy: { id: "desc" },
           select: {
             id: true,

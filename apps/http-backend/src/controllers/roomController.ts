@@ -20,7 +20,7 @@ export const createRoom = async (req: Request, res: Response) => {
     res.json({ "Inncorrect Inputs": result.error });
     return;
   }
-  const { slug } = result.data;
+  const { slug } = result.data; 
 //   admin: { connect: { id: userId } }
   try {
     const room = await prismaClient.room.create({
@@ -34,7 +34,33 @@ export const createRoom = async (req: Request, res: Response) => {
   }
 };
 
-// res.status(201).json({ message: "User created", user });
-//   } catch (error) {
-//     res.status(500).json({ error: "Error during signup", details: error });
-//   }
+
+
+export const joinRoom = async (req: Request, res: Response) => {
+  const result = RoomZodSchema.safeParse(req.params);
+  if (!result.success) {
+    res.status(400).json({ error: "Incorrect Room name" });
+    return;
+  }
+
+  const { slug } = result.data;
+
+  try {
+    const room = await prismaClient.room.findUnique({
+      where: { slug },
+    });
+
+    if (!room) {
+      res.status(404).json({ message: "Room not found" });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Room joined successfully",
+      room,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

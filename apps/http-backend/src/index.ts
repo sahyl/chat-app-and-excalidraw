@@ -1,10 +1,17 @@
-import express, { Router } from "express"
+import express  from "express"
 import userRoutes from "./routes/userRoutes"
 import roomRouter from "./routes/roomRoutes"
 import { HTTP_PORT } from "@repo/common-backend/config"
 import chatRouter from "./routes/chatRoutes"
+import cors from "cors"
 
 const app = express()
+
+app.use(cors({origin:"http://localhost:3000" , credentials: true}))
+
+
+
+
 app.use(express.json())
 
 
